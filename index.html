@@ -5,11 +5,6 @@
 <title>Quiz TENS 💙</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- 🔥 BLOQUEO DE CACHÉ -->
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-<meta http-equiv="Pragma" content="no-cache" />
-<meta http-equiv="Expires" content="0" />
-
 <style>
 body {
     font-family: Arial;
@@ -54,73 +49,13 @@ button {
 
 <script>
 
-/* =========================
-   🔥 ESTADO GLOBAL
-========================= */
-
 let ramoActual = "";
 let actual = 0;
 let puntaje = 0;
 let respondido = false;
 
 /* =========================
-   🔥 LIMPIEZA TOTAL (ANTI BUG CELULAR/PC)
-========================= */
-
-function boot(){
-    localStorage.clear();
-    sessionStorage.clear();
-
-    ramoActual = "";
-    actual = 0;
-    puntaje = 0;
-
-    inicio();
-}
-
-window.onload = boot;
-
-/* =========================
-   💛 MENSAJE INICIAL
-========================= */
-
-function inicio(){
-
-    document.getElementById("app").innerHTML = `
-        <h2>💛 Para ti Pollito 💛</h2>
-
-        <p>
-        Esta pagina la realice con mucho cariño para ti Princesa. Recuerda que eres una Mujer Super Inteligente y Fuerte.💛<br><br>
-        Este pequeño test es para que sigas creciendo en tu carrera.<br><br>
-        No es solo una evaluación… es un recordatorio de lo lejos que puedes llegar.<br><br>
-        TE AMO MI NIÑA.💛<br><br>
-        </p>
-
-        <button onclick="menu()">Siguiente</button>
-    `;
-}
-
-/* =========================
-   📋 MENÚ
-========================= */
-
-function menu(){
-
-    let guardado = localStorage.getItem("ultimoPuntaje");
-
-    document.getElementById("app").innerHTML = `
-        <h2>💛 Quiz TENS 💛</h2>
-
-        <p>Último puntaje: ${guardado ?? "No registrado"}</p>
-
-        <button onclick="iniciar('anatomia')">Anatomía</button>
-        <button onclick="iniciar('aps')">APS</button>
-        <button onclick="iniciar('farmaco')">Farmacología</button>
-    `;
-}
-
-/* =========================
-   🧠 BANCO 15 PREGUNTAS
+   BANCO (15 PREGUNTAS)
 ========================= */
 
 const banco = {
@@ -182,7 +117,54 @@ farmaco: [
 };
 
 /* =========================
-   🧪 INICIAR QUIZ
+   INICIO
+========================= */
+
+window.onload = () => {
+    inicio();
+};
+
+/* =========================
+   MENSAJE INICIAL
+========================= */
+
+function inicio(){
+
+    document.getElementById("app").innerHTML = `
+        <h2>💛 Para ti Pollito 💛</h2>
+
+        <p>
+        Esta pagina la realice con mucho cariño para ti Princesa. Recuerda que eres una Mujer Super Inteligente y Fuerte.💛<br><br>
+        Este pequeño test es para que sigas creciendo en tu carrera.<br><br>
+        No es solo una evaluación… es un recordatorio de lo lejos que puedes llegar.<br><br>
+        TE AMO MI NIÑA.💛<br><br>
+        </p>
+
+        <button onclick="menu()">Siguiente</button>
+    `;
+}
+
+/* =========================
+   MENÚ
+========================= */
+
+function menu(){
+
+    let guardado = localStorage.getItem("ultimoPuntaje");
+
+    document.getElementById("app").innerHTML = `
+        <h2>💛 Quiz TENS 💛</h2>
+
+        <p>Último puntaje: ${guardado ?? "No registrado"}</p>
+
+        <button onclick="iniciar('anatomia')">Anatomía</button>
+        <button onclick="iniciar('aps')">APS</button>
+        <button onclick="iniciar('farmaco')">Farmacología</button>
+    `;
+}
+
+/* =========================
+   INICIAR
 ========================= */
 
 function iniciar(ramo){
@@ -197,7 +179,7 @@ function iniciar(ramo){
 }
 
 /* =========================
-   📄 CARGAR PREGUNTA
+   CARGAR (🔥 FIX REAL)
 ========================= */
 
 function cargar(){
@@ -206,13 +188,18 @@ function cargar(){
 
     let p = banco[ramoActual][actual];
 
-    let opciones = p.o.map((op, i) => ({texto: op, index: i}));
+    // 🔥 aquí está la clave: mezclar OBJETOS completos
+    let opciones = p.o.map((texto, i) => ({
+        texto,
+        correcta: i === p.r
+    }));
+
     opciones.sort(() => Math.random() - 0.5);
 
     let html = `<h3>${p.p}</h3>`;
 
-    opciones.forEach(op => {
-        html += `<button onclick="responder(${op.index})">${op.texto}</button>`;
+    opciones.forEach((op, i) => {
+        html += `<button onclick="responder(this, ${op.correcta})">${op.texto}</button>`;
     });
 
     html += `<button id="nextBtn" disabled onclick="siguiente()">Siguiente</button>`;
@@ -221,32 +208,30 @@ function cargar(){
 }
 
 /* =========================
-   🎯 RESPONDER
+   RESPONDER (🔥 FIX REAL)
 ========================= */
 
-function responder(i){
+function responder(btn, correcta){
 
     if(respondido) return;
     respondido = true;
 
-    let p = banco[ramoActual][actual];
     let botones = document.querySelectorAll("#app button");
 
-    botones.forEach((b, index) => {
+    botones.forEach(b => b.disabled = true);
 
-        if(index === p.r) b.classList.add("correct");
-        if(index === i && i !== p.r) b.classList.add("wrong");
-
-        b.disabled = true;
-    });
-
-    if(i === p.r) puntaje++;
+    if(correcta){
+        btn.classList.add("correct");
+        puntaje++;
+    } else {
+        btn.classList.add("wrong");
+    }
 
     document.getElementById("nextBtn").disabled = false;
 }
 
 /* =========================
-   ➡ SIGUIENTE
+   SIGUIENTE
 ========================= */
 
 function siguiente(){
