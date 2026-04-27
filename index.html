@@ -5,6 +5,11 @@
 <title>Quiz TENS 💙</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!-- 🔥 ANTI-CACHE (IMPORTANTE PARA CELULAR) -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+
 <style>
 body {
     font-family: Arial;
@@ -49,30 +54,40 @@ button {
 
 <script>
 
+/* =========================
+   🔥 LIMPIEZA TOTAL INICIO
+========================= */
+localStorage.clear();
+sessionStorage.clear();
+
+/* =========================
+   ESTADO
+========================= */
+
 let ramoActual = "";
 let actual = 0;
 let puntaje = 0;
 let respondido = false;
 
 /* =========================
-   BANCO 15 PREGUNTAS FIJO
+   BANCO 15 PREGUNTAS
 ========================= */
 
 const banco = {
 
 anatomia: [
 {p:"Función glóbulos rojos", o:["Defensa","Oxígeno","Hormonas","Coagulación"], r:1},
-{p:"Órgano respiratorio", o:["Pulmones","Hígado","Riñón","Páncreas"], r:0},
+{p:"Sistema respiratorio", o:["Pulmones","Hígado","Riñón","Páncreas"], r:0},
 {p:"Sistema nervioso", o:["Cerebro","Corazón","Hígado","Estómago"], r:0},
 {p:"Intercambio gaseoso", o:["Alvéolos","Bronquios","Tráquea","Nariz"], r:0},
 {p:"Hueso más largo", o:["Fémur","Radio","Tibia","Húmero"], r:0},
-{p:"Unidad del cuerpo", o:["Célula","Tejido","Órgano","Sistema"], r:0},
-{p:"Vista", o:["Ojo","Oído","Nariz","Lengua"], r:0},
-{p:"Protección", o:["Sistema inmune","Digestivo","Óseo","Muscular"], r:0},
-{p:"Columna pertenece a", o:["Esqueleto","Brazo","Pierna","Cabeza"], r:0},
+{p:"Unidad básica", o:["Célula","Tejido","Órgano","Sistema"], r:0},
+{p:"Órgano de visión", o:["Ojo","Oído","Nariz","Lengua"], r:0},
+{p:"Sistema inmune", o:["Defensa","Digestivo","Óseo","Muscular"], r:0},
+{p:"Columna vertebral", o:["Esqueleto","Brazo","Pierna","Cabeza"], r:0},
 {p:"Pulmones son", o:["Respiratorio","Digestivo","Circulatorio","Nervioso"], r:0},
 {p:"Sangre transporta", o:["Oxígeno","Huesos","Tejidos","Agua"], r:0},
-{p:"Corazón función", o:["Bombear sangre","Respirar","Filtrar","Mover"], r:0},
+{p:"Corazón función", o:["Bombear","Respirar","Filtrar","Mover"], r:0},
 {p:"Sistema óseo", o:["Soporte","Respirar","Digestión","Filtrar"], r:0},
 {p:"Músculos permiten", o:["Movimiento","Pensar","Respirar","Filtrar"], r:0},
 {p:"Digestivo inicia en", o:["Boca","Estómago","Intestino","Esófago"], r:0}
@@ -82,7 +97,7 @@ aps: [
 {p:"APS significa", o:["Atención primaria","Privada","UCI","Emergencia"], r:0},
 {p:"Objetivo APS", o:["Prevención","Cirugía","Urgencia","Hospital"], r:0},
 {p:"CESFAM es", o:["Primario","Terciario","UCI","Privado"], r:0},
-{p:"Vacunación es", o:["Prevención","Tratamiento","Cirugía","Diagnóstico"], r:0},
+{p:"Vacunación", o:["Prevención","Tratamiento","Cirugía","Diagnóstico"], r:0},
 {p:"Control sano", o:["Seguimiento","Urgencia","Cirugía","Alta"], r:0},
 {p:"APS trabaja con", o:["Comunidad","Hospital","UCI","Quirófano"], r:0},
 {p:"Educación salud", o:["Prevenir","Curar","Operar","Internar"], r:0},
@@ -90,16 +105,16 @@ aps: [
 {p:"Promoción", o:["Hábitos","Cirugía","Medicamentos","Hospital"], r:0},
 {p:"Prevención evita", o:["Enfermedad","Cirugía","Medicamentos","UCI"], r:0},
 {p:"Nivel APS", o:["Primario","Secundario","Terciario","Crítico"], r:0},
-{p:"CESFAM es", o:["Centro salud","Hospital","Clínica","Laboratorio"], r:0},
+{p:"CESFAM", o:["Centro salud","Hospital","Clínica","Laboratorio"], r:0},
 {p:"Primer contacto", o:["APS","UCI","Cirugía","Hospital"], r:0},
 {p:"Comunidad", o:["APS","UCI","Cirugía","Hospital"], r:0},
-{p:"Prevención secundaria", o:["Detecta enfermedad","Cirugía","Muerte","Nada"], r:0}
+{p:"Prevención secundaria", o:["Detecta","Cirugía","Muerte","Nada"], r:0}
 ],
 
 farmaco: [
 {p:"Dosis es", o:["Cantidad","Tiempo","Tipo","Error"], r:0},
 {p:"RAM", o:["Reacción adversa","Registro","Respuesta","Revisión"], r:0},
-{p:"Antibióticos", o:["Bacterias","Virus","Dolor","Fiebre"], r:0},
+{p:"Antibiótico", o:["Bacterias","Virus","Dolor","Fiebre"], r:0},
 {p:"Vía IM", o:["Intramuscular","Intravenosa","Oral","Subcutánea"], r:0},
 {p:"Vencido", o:["No usar","Usar","Duplicar","Diluir"], r:0},
 {p:"Paracetamol", o:["Dolor","Infección","Virus","Cirugía"], r:0},
@@ -108,13 +123,44 @@ farmaco: [
 {p:"Vía oral", o:["Boca","Piel","Músculo","Vena"], r:0},
 {p:"IV", o:["Intravenosa","Intramuscular","Oral","Subcutánea"], r:0},
 {p:"Genérico", o:["Equivalente","Falso","Vencido","Diluido"], r:0},
-{p:"Analgésico", o:["Dolor","Infección","Fiebre","Virus"], r:0},
+{p:"Analgésico", o:["Dolor","Fiebre","Virus","Infección"], r:0},
 {p:"Antipirético", o:["Fiebre","Dolor","Presión","Azúcar"], r:0},
 {p:"Farmacología", o:["Medicamentos","Huesos","Sangre","Virus"], r:0},
-{p:"Interacción", o:["Entre fármacos","Herida","Virus","Diagnóstico"], r:0}
+{p:"Interacción", o:["Fármacos","Herida","Virus","Diagnóstico"], r:0}
 ]
 
 };
+
+/* =========================
+   INICIO SEGURO (CRÍTICO)
+========================= */
+
+window.onload = () => {
+    inicio();
+};
+
+/* =========================
+   INICIO MENSAJE
+========================= */
+
+function inicio(){
+
+    ramoActual = "";
+    actual = 0;
+    puntaje = 0;
+
+    document.getElementById("app").innerHTML = `
+        <h2>💛 Para ti 💛</h2>
+
+        <p>
+        Este test fue hecho con cariño.<br><br>
+        Cree en ti, siempre.<br><br>
+        💙
+        </p>
+
+        <button onclick="menu()">Siguiente</button>
+    `;
+}
 
 /* =========================
    MENÚ
@@ -235,14 +281,11 @@ function siguiente(){
 
             <h3>${nota >= 4 ? "✅ Aprobado" : "❌ Reprobado"}</h3>
 
-            <button onclick="iniciar(ramoActual)">🔁 Reintentar ramo</button>
-            <button onclick="menu()">🏠 Volver al menú</button>
+            <button onclick="iniciar(ramoActual)">🔁 Reintentar</button>
+            <button onclick="menu()">🏠 Volver</button>
         `;
     }
 }
-
-/* INICIO */
-menu();
 
 </script>
 
