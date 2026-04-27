@@ -5,7 +5,7 @@
 <title>Quiz TENS 💙</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- 🔥 ANTI-CACHE (IMPORTANTE PARA CELULAR) -->
+<!-- Anti-cache móvil -->
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
@@ -55,12 +55,6 @@ button {
 <script>
 
 /* =========================
-   🔥 LIMPIEZA TOTAL INICIO
-========================= */
-localStorage.clear();
-sessionStorage.clear();
-
-/* =========================
    ESTADO
 ========================= */
 
@@ -82,21 +76,21 @@ anatomia: [
 {p:"Intercambio gaseoso", o:["Alvéolos","Bronquios","Tráquea","Nariz"], r:0},
 {p:"Hueso más largo", o:["Fémur","Radio","Tibia","Húmero"], r:0},
 {p:"Unidad básica", o:["Célula","Tejido","Órgano","Sistema"], r:0},
-{p:"Órgano de visión", o:["Ojo","Oído","Nariz","Lengua"], r:0},
+{p:"Órgano visión", o:["Ojo","Oído","Nariz","Lengua"], r:0},
 {p:"Sistema inmune", o:["Defensa","Digestivo","Óseo","Muscular"], r:0},
 {p:"Columna vertebral", o:["Esqueleto","Brazo","Pierna","Cabeza"], r:0},
-{p:"Pulmones son", o:["Respiratorio","Digestivo","Circulatorio","Nervioso"], r:0},
+{p:"Pulmones", o:["Respiratorio","Digestivo","Circulatorio","Nervioso"], r:0},
 {p:"Sangre transporta", o:["Oxígeno","Huesos","Tejidos","Agua"], r:0},
-{p:"Corazón función", o:["Bombear","Respirar","Filtrar","Mover"], r:0},
+{p:"Corazón", o:["Bombear","Respirar","Filtrar","Mover"], r:0},
 {p:"Sistema óseo", o:["Soporte","Respirar","Digestión","Filtrar"], r:0},
-{p:"Músculos permiten", o:["Movimiento","Pensar","Respirar","Filtrar"], r:0},
+{p:"Músculos", o:["Movimiento","Pensar","Respirar","Filtrar"], r:0},
 {p:"Digestivo inicia en", o:["Boca","Estómago","Intestino","Esófago"], r:0}
 ],
 
 aps: [
 {p:"APS significa", o:["Atención primaria","Privada","UCI","Emergencia"], r:0},
 {p:"Objetivo APS", o:["Prevención","Cirugía","Urgencia","Hospital"], r:0},
-{p:"CESFAM es", o:["Primario","Terciario","UCI","Privado"], r:0},
+{p:"CESFAM", o:["Primario","Terciario","UCI","Privado"], r:0},
 {p:"Vacunación", o:["Prevención","Tratamiento","Cirugía","Diagnóstico"], r:0},
 {p:"Control sano", o:["Seguimiento","Urgencia","Cirugía","Alta"], r:0},
 {p:"APS trabaja con", o:["Comunidad","Hospital","UCI","Quirófano"], r:0},
@@ -105,7 +99,7 @@ aps: [
 {p:"Promoción", o:["Hábitos","Cirugía","Medicamentos","Hospital"], r:0},
 {p:"Prevención evita", o:["Enfermedad","Cirugía","Medicamentos","UCI"], r:0},
 {p:"Nivel APS", o:["Primario","Secundario","Terciario","Crítico"], r:0},
-{p:"CESFAM", o:["Centro salud","Hospital","Clínica","Laboratorio"], r:0},
+{p:"CESFAM es", o:["Centro salud","Hospital","Clínica","Laboratorio"], r:0},
 {p:"Primer contacto", o:["APS","UCI","Cirugía","Hospital"], r:0},
 {p:"Comunidad", o:["APS","UCI","Cirugía","Hospital"], r:0},
 {p:"Prevención secundaria", o:["Detecta","Cirugía","Muerte","Nada"], r:0}
@@ -132,7 +126,7 @@ farmaco: [
 };
 
 /* =========================
-   INICIO SEGURO (CRÍTICO)
+   INICIO SIEMPRE LIMPIO
 ========================= */
 
 window.onload = () => {
@@ -140,7 +134,7 @@ window.onload = () => {
 };
 
 /* =========================
-   INICIO MENSAJE
+   MENSAJE INICIAL (TU TEXTO)
 ========================= */
 
 function inicio(){
@@ -150,12 +144,13 @@ function inicio(){
     puntaje = 0;
 
     document.getElementById("app").innerHTML = `
-        <h2>💛 Para ti 💛</h2>
+        <h2>💛 Para ti Pollito 💛</h2>
 
         <p>
-        Este test fue hecho con cariño.<br><br>
-        Cree en ti, siempre.<br><br>
-        💙
+        Esta pagina la realice con mucho cariño para ti Princesa. Recuerda que eres una Mujer Super Inteligente y Fuerte.💛<br><br>
+        Este pequeño test es para que sigas creciendo en tu carrera.<br><br>
+        No es solo una evaluación… es un recordatorio de lo lejos que puedes llegar.<br><br>
+        TE AMO MI NIÑA.💛<br><br>
         </p>
 
         <button onclick="menu()">Siguiente</button>
@@ -182,7 +177,7 @@ function menu(){
 }
 
 /* =========================
-   INICIAR
+   INICIAR QUIZ
 ========================= */
 
 function iniciar(ramo){
@@ -197,7 +192,7 @@ function iniciar(ramo){
 }
 
 /* =========================
-   CARGAR
+   CARGAR PREGUNTA
 ========================= */
 
 function cargar(){
@@ -234,7 +229,6 @@ function responder(i){
     respondido = true;
 
     let p = banco[ramoActual][actual];
-
     let botones = document.querySelectorAll("#app button");
 
     botones.forEach((b, index) => {
