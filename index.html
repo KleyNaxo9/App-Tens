@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Quiz TENS 💙</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #0f172a;
+    color: white;
+    text-align: center;
+}
+
+.container {
+    max-width: 750px;
+    margin: auto;
+    padding: 20px;
+}
+
+button {
+    display: block;
+    width: 100%;
+    margin: 8px 0;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #334155;
+    color: white;
+    cursor: pointer;
+}
+
+.correct { background: #22c55e !important; }
+.wrong { background: #ef4444 !important; }
+
+#nextBtn {
+    margin-top: 10px;
+    background: #3b82f6;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>💙 Evaluación TENS 💙</h2>
+
+<div id="app"></div>
+
+</div>
+
+<script>
+
+let estado = "inicio"; // inicio → menu → quiz
+let ramoActual = "";
+let actual = 0;
+let puntaje = 0;
+let respondido = false;
+
+/* =========================
+   BANCO DE PREGUNTAS
+========================= */
+
+const banco = {
+
+anatomia: [
+{p:"Función de los glóbulos rojos", o:["Defensa","Oxígeno","Hormonas","Coagulación"], c:1},
+{p:"Sistema respiratorio principal", o:["Pulmones","Hígado","Riñones","Páncreas"], c:0},
+{p:"Órgano del sistema nervioso", o:["Cerebro","Corazón","Hígado","Estómago"], c:0},
+{p:"Intercambio gaseoso ocurre en", o:["Alvéolos","Bronquios","Tráquea","Nariz"], c:0},
+{p:"Hueso más largo del cuerpo", o:["Fémur","Radio","Tibia","Húmero"], c:0},
+{p:"Sistema digestivo inicia en", o:["Boca","Estómago","Intestino","Esófago"], c:0},
+{p:"Función del corazón", o:["Bombear sangre","Respirar","Filtrar","Mover"], c:0},
+{p:"Unidad básica del cuerpo", o:["Célula","Tejido","Órgano","Sistema"], c:0},
+{p:"Órgano de la vista", o:["Ojo","Oído","Nariz","Lengua"], c:0},
+{p:"Sistema que protege el cuerpo", o:["Inmune","Nervioso","Óseo","Muscular"], c:0},
+{p:"Columna vertebral pertenece a", o:["Esqueleto","Brazo","Pierna","Cabeza"], c:0},
+{p:"Pulmones pertenecen a", o:["Respiratorio","Digestivo","Circulatorio","Nervioso"], c:0},
+{p:"La sangre transporta", o:["Oxígeno","Huesos","Tejidos","Solo agua"], c:0},
+{p:"Sistema óseo función", o:["Soporte","Respirar","Digestión","Filtrar"], c:0},
+{p:"Músculos permiten", o:["Movimiento","Respirar","Pensar","Filtrar"], c:0}
+],
+
+aps: [
+{p:"APS significa", o:["Atención primaria de salud","Privada","UCI","Emergencia"], c:0},
+{p:"Objetivo APS", o:["Prevención","Cirugía","Urgencia","Hospital"], c:0},
+{p:"CESFAM es", o:["Nivel primario","Terciario","UCI","Privado"], c:0},
+{p:"Promoción de salud", o:["Prevenir enfermedad","Operar","Hospitalizar","Medicamento"], c:0},
+{p:"Control sano es", o:["Seguimiento","Urgencia","Cirugía","Alta"], c:0},
+{p:"Vacunación es", o:["Prevención","Tratamiento","Cirugía","Diagnóstico"], c:0},
+{p:"APS trabaja con", o:["Comunidad","Hospital","UCI","Quirófano"], c:0},
+{p:"Educación en salud busca", o:["Prevenir","Curar","Operar","Internar"], c:0},
+{p:"APS nivel", o:["Primario","Secundario","Terciario","Crítico"], c:0},
+{p:"Control niño sano es", o:["APS","Urgencia","Cirugía","UCI"], c:0},
+{p:"Promoción incluye", o:["Hábitos saludables","Cirugías","Medicamentos","Hospital"], c:0},
+{p:"Prevención evita", o:["Enfermedades","Cirugía","Medicamentos","UCI"], c:0},
+{p:"APS se enfoca en", o:["Comunidad","Hospital","Quirófano","Urgencia"], c:0},
+{p:"CESFAM es", o:["Centro salud","Hospital","Clínica","Laboratorio"], c:0},
+{p:"Atención primaria es", o:["Primer contacto","Especialidad","Urgencia","Cirugía"], c:0}
+],
+
+farmaco: [
+{p:"Qué es dosis", o:["Cantidad","Tiempo","Tipo","Error"], c:0},
+{p:"RAM significa", o:["Reacción adversa","Registro","Respuesta","Revisión"], c:0},
+{p:"Antibióticos actúan sobre", o:["Bacterias","Virus","Dolor","Fiebre"], c:0},
+{p:"Vía IM es", o:["Intramuscular","Intravenosa","Oral","Subcutánea"], c:0},
+{p:"Medicamento vencido", o:["No usar","Usar","Duplicar","Diluir"], c:0},
+{p:"Paracetamol sirve para", o:["Dolor","Infección","Virus","Cirugía"], c:0},
+{p:"Dosis depende de", o:["Paciente","Color","Marca","Hora"], c:0},
+{p:"Antiinflamatorio reduce", o:["Inflamación","Sueño","Vista","Respiración"], c:0},
+{p:"Vía oral es", o:["Boca","Piel","Músculo","Vena"], c:0},
+{p:"IV significa", o:["Intravenosa","Intramuscular","Oral","Subcutánea"], c:0},
+{p:"Genérico es", o:["Equivalente","Falso","Vencido","Diluido"], c:0},
+{p:"Analgesico sirve para", o:["Dolor","Infección","Fiebre","Virus"], c:0},
+{p:"Antipirético baja", o:["Fiebre","Dolor","Presión","Azúcar"], c:0},
+{p:"Farmacología estudia", o:["Medicamentos","Huesos","Sangre","Virus"], c:0},
+{p:"Interacción es", o:["Efecto entre fármacos","Herida","Virus","Diagnóstico"], c:0}
+]
+
+};
+
+/* =========================
+   PANTALLA INICIO (MENSAJE)
+========================= */
+
+function inicio(){
+    estado = "inicio";
+
+    document.getElementById("app").innerHTML = `
+        <h2>💛 Para ti Pollito 💛</h2>
+
+        <p>
+        Esta pagina la realice con mucho cariño para ti Princesa. Recuerda que eres una Mujer Super Inteligente y Fuerte.💛<br><br>
+        Este pequeño test es para que sigas creciendo en tu carrera.<br><br>
+        No es solo una evaluación… es un recordatorio de lo lejos que puedes llegar.<br><br>
+        TE AMO MI NIÑA.💛<br><br>
+     
+        </p>
+
+        <button onclick="menu()">Siguiente</button>
+    `;
+}
+
+/* =========================
+   MENÚ
+========================= */
+
+function menu(){
+    estado = "menu";
+
+    document.getElementById("app").innerHTML = `
+        <h3>Elige un ramo</h3>
+        <button onclick="iniciar('anatomia')">Anatomía</button>
+        <button onclick="iniciar('aps')">APS</button>
+        <button onclick="iniciar('farmaco')">Farmacología</button>
+    `;
+}
+
+/* =========================
+   INICIAR QUIZ
+========================= */
+
+function iniciar(ramo){
+    estado = "quiz";
+    ramoActual = ramo;
+
+    banco[ramoActual].sort(() => Math.random() - 0.5);
+
+    actual = 0;
+    puntaje = 0;
+    cargar();
+}
+
+/* =========================
+   CARGAR PREGUNTA
+========================= */
+
+function cargar(){
+    respondido = false;
+
+    let p = banco[ramoActual][actual];
+
+    let html = `<h3>${p.p}</h3>`;
+
+    p.o.forEach((op, i) => {
+        html += `<button onclick="responder(${i})">${op}</button>`;
+    });
+
+    html += `<button id="nextBtn" disabled onclick="siguiente()">Siguiente</button>`;
+
+    document.getElementById("app").innerHTML = html;
+}
+
+/* =========================
+   RESPONDER
+========================= */
+
+function responder(i){
+    if(respondido) return;
+    respondido = true;
+
+    let p = banco[ramoActual][actual];
+    let botones = document.querySelectorAll("#app button");
+
+    botones.forEach((b, index) => {
+        if(index === p.c) b.classList.add("correct");
+        if(index === i && i !== p.c) b.classList.add("wrong");
+        b.disabled = true;
+    });
+
+    if(i === p.c) puntaje++;
+
+    document.getElementById("nextBtn").disabled = false;
+}
+
+/* =========================
+   SIGUIENTE
+========================= */
+
+function siguiente(){
+    actual++;
+
+    if(actual < banco[ramoActual].length){
+        cargar();
+    } else {
+
+        let nota = ((puntaje / banco[ramoActual].length) * 6) + 1;
+
+        document.getElementById("app").innerHTML = `
+            <h2>🎉 Resultado final 🎉</h2>
+            <h3>Puntaje: ${puntaje}/15</h3>
+            <h3>Nota: ${nota.toFixed(1)}</h3>
+            <h3>${nota >= 4 ? "✅ Aprobado" : "❌ Reprobado"}</h3>
+            <button onclick="menu()">Volver al menú</button>
+        `;
+    }
+}
+
+/* INICIO */
+inicio();
+
+</script>
+
+</body>
+</html>
