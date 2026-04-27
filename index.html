@@ -148,10 +148,14 @@ function inicio(){
 ========================= */
 
 function menu(){
-    estado = "menu";
+
+    let guardado = localStorage.getItem("ultimoPuntaje");
 
     document.getElementById("app").innerHTML = `
         <h3>Elige un ramo</h3>
+
+        <p>Último puntaje: ${guardado ?? "No registrado"}</p>
+
         <button onclick="iniciar('anatomia')">Anatomía</button>
         <button onclick="iniciar('aps')">APS</button>
         <button onclick="iniciar('farmaco')">Farmacología</button>
@@ -226,16 +230,22 @@ function siguiente(){
         cargar();
     } else {
 
-        let nota = ((puntaje / banco[ramoActual].length) * 6) + 1;
+    let nota = ((puntaje / banco[ramoActual].length) * 6) + 1;
 
-        document.getElementById("app").innerHTML = `
-            <h2>🎉 Resultado final 🎉</h2>
-            <h3>Puntaje: ${puntaje}/15</h3>
-            <h3>Nota: ${nota.toFixed(1)}</h3>
-            <h3>${nota >= 4 ? "✅ Aprobado" : "❌ Reprobado"}</h3>
-            <button onclick="menu()">Volver al menú</button>
-        `;
-    }
+    document.getElementById("app").innerHTML = `
+        <h2>🎉 Resultado final 🎉</h2>
+
+        <h3>Puntaje: ${puntaje}/${banco[ramoActual].length}</h3>
+        <h3>Nota: ${nota.toFixed(1)}</h3>
+
+        <h3>${nota >= 4 ? "✅ Aprobado" : "❌ Reprobado"}</h3>
+
+        <!-- 🔁 BOTÓN NUEVO -->
+        <button onclick="iniciar(ramoActual)">🔁 Reintentar ramo</button>
+
+        <button onclick="menu()">🏠 Volver al menú</button>
+    `;
+}
 }
 
 /* INICIO */
