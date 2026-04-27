@@ -5,7 +5,7 @@
 <title>Quiz TENS 💙</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Anti-cache móvil -->
+<!-- 🔥 BLOQUEO DE CACHÉ -->
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
@@ -55,7 +55,7 @@ button {
 <script>
 
 /* =========================
-   ESTADO
+   🔥 ESTADO GLOBAL
 ========================= */
 
 let ramoActual = "";
@@ -64,7 +64,63 @@ let puntaje = 0;
 let respondido = false;
 
 /* =========================
-   BANCO 15 PREGUNTAS
+   🔥 LIMPIEZA TOTAL (ANTI BUG CELULAR/PC)
+========================= */
+
+function boot(){
+    localStorage.clear();
+    sessionStorage.clear();
+
+    ramoActual = "";
+    actual = 0;
+    puntaje = 0;
+
+    inicio();
+}
+
+window.onload = boot;
+
+/* =========================
+   💛 MENSAJE INICIAL
+========================= */
+
+function inicio(){
+
+    document.getElementById("app").innerHTML = `
+        <h2>💛 Para ti Pollito 💛</h2>
+
+        <p>
+        Esta pagina la realice con mucho cariño para ti Princesa. Recuerda que eres una Mujer Super Inteligente y Fuerte.💛<br><br>
+        Este pequeño test es para que sigas creciendo en tu carrera.<br><br>
+        No es solo una evaluación… es un recordatorio de lo lejos que puedes llegar.<br><br>
+        TE AMO MI NIÑA.💛<br><br>
+        </p>
+
+        <button onclick="menu()">Siguiente</button>
+    `;
+}
+
+/* =========================
+   📋 MENÚ
+========================= */
+
+function menu(){
+
+    let guardado = localStorage.getItem("ultimoPuntaje");
+
+    document.getElementById("app").innerHTML = `
+        <h2>💛 Quiz TENS 💛</h2>
+
+        <p>Último puntaje: ${guardado ?? "No registrado"}</p>
+
+        <button onclick="iniciar('anatomia')">Anatomía</button>
+        <button onclick="iniciar('aps')">APS</button>
+        <button onclick="iniciar('farmaco')">Farmacología</button>
+    `;
+}
+
+/* =========================
+   🧠 BANCO 15 PREGUNTAS
 ========================= */
 
 const banco = {
@@ -81,7 +137,7 @@ anatomia: [
 {p:"Columna vertebral", o:["Esqueleto","Brazo","Pierna","Cabeza"], r:0},
 {p:"Pulmones", o:["Respiratorio","Digestivo","Circulatorio","Nervioso"], r:0},
 {p:"Sangre transporta", o:["Oxígeno","Huesos","Tejidos","Agua"], r:0},
-{p:"Corazón", o:["Bombear","Respirar","Filtrar","Mover"], r:0},
+{p:"Corazón función", o:["Bombear","Respirar","Filtrar","Mover"], r:0},
 {p:"Sistema óseo", o:["Soporte","Respirar","Digestión","Filtrar"], r:0},
 {p:"Músculos", o:["Movimiento","Pensar","Respirar","Filtrar"], r:0},
 {p:"Digestivo inicia en", o:["Boca","Estómago","Intestino","Esófago"], r:0}
@@ -99,7 +155,7 @@ aps: [
 {p:"Promoción", o:["Hábitos","Cirugía","Medicamentos","Hospital"], r:0},
 {p:"Prevención evita", o:["Enfermedad","Cirugía","Medicamentos","UCI"], r:0},
 {p:"Nivel APS", o:["Primario","Secundario","Terciario","Crítico"], r:0},
-{p:"CESFAM es", o:["Centro salud","Hospital","Clínica","Laboratorio"], r:0},
+{p:"CESFAM", o:["Centro salud","Hospital","Clínica","Laboratorio"], r:0},
 {p:"Primer contacto", o:["APS","UCI","Cirugía","Hospital"], r:0},
 {p:"Comunidad", o:["APS","UCI","Cirugía","Hospital"], r:0},
 {p:"Prevención secundaria", o:["Detecta","Cirugía","Muerte","Nada"], r:0}
@@ -126,58 +182,7 @@ farmaco: [
 };
 
 /* =========================
-   INICIO SIEMPRE LIMPIO
-========================= */
-
-window.onload = () => {
-    inicio();
-};
-
-/* =========================
-   MENSAJE INICIAL (TU TEXTO)
-========================= */
-
-function inicio(){
-
-    ramoActual = "";
-    actual = 0;
-    puntaje = 0;
-
-    document.getElementById("app").innerHTML = `
-        <h2>💛 Para ti Pollito 💛</h2>
-
-        <p>
-        Esta pagina la realice con mucho cariño para ti Princesa. Recuerda que eres una Mujer Super Inteligente y Fuerte.💛<br><br>
-        Este pequeño test es para que sigas creciendo en tu carrera.<br><br>
-        No es solo una evaluación… es un recordatorio de lo lejos que puedes llegar.<br><br>
-        TE AMO MI NIÑA.💛<br><br>
-        </p>
-
-        <button onclick="menu()">Siguiente</button>
-    `;
-}
-
-/* =========================
-   MENÚ
-========================= */
-
-function menu(){
-
-    let guardado = localStorage.getItem("ultimoPuntaje");
-
-    document.getElementById("app").innerHTML = `
-        <h2>💛 Quiz TENS 💛</h2>
-
-        <p>Último puntaje: ${guardado ?? "No registrado"}</p>
-
-        <button onclick="iniciar('anatomia')">Anatomía</button>
-        <button onclick="iniciar('aps')">APS</button>
-        <button onclick="iniciar('farmaco')">Farmacología</button>
-    `;
-}
-
-/* =========================
-   INICIAR QUIZ
+   🧪 INICIAR QUIZ
 ========================= */
 
 function iniciar(ramo){
@@ -192,7 +197,7 @@ function iniciar(ramo){
 }
 
 /* =========================
-   CARGAR PREGUNTA
+   📄 CARGAR PREGUNTA
 ========================= */
 
 function cargar(){
@@ -201,11 +206,7 @@ function cargar(){
 
     let p = banco[ramoActual][actual];
 
-    let opciones = p.o.map((op, i) => ({
-        texto: op,
-        index: i
-    }));
-
+    let opciones = p.o.map((op, i) => ({texto: op, index: i}));
     opciones.sort(() => Math.random() - 0.5);
 
     let html = `<h3>${p.p}</h3>`;
@@ -220,7 +221,7 @@ function cargar(){
 }
 
 /* =========================
-   RESPONDER
+   🎯 RESPONDER
 ========================= */
 
 function responder(i){
@@ -233,26 +234,19 @@ function responder(i){
 
     botones.forEach((b, index) => {
 
-        if(index === p.r){
-            b.classList.add("correct");
-        }
-
-        if(index === i && i !== p.r){
-            b.classList.add("wrong");
-        }
+        if(index === p.r) b.classList.add("correct");
+        if(index === i && i !== p.r) b.classList.add("wrong");
 
         b.disabled = true;
     });
 
-    if(i === p.r){
-        puntaje++;
-    }
+    if(i === p.r) puntaje++;
 
     document.getElementById("nextBtn").disabled = false;
 }
 
 /* =========================
-   SIGUIENTE
+   ➡ SIGUIENTE
 ========================= */
 
 function siguiente(){
